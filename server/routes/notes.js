@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-
 //controller
 const {
   createNote,
@@ -12,12 +11,11 @@ const {
   deleteNote,
 } = require("../controllers/notes");
 
-
-router.post("/note",createNote)
-router.get("/note/:id",readNote)
-router.get("/note", readAllNote)
-router.get("/note-mynote/:id", readAllMyNote)
-router.put("/note/:id", updateNote)
-router.delete("/note/:id", deleteNote)
+router.post("/note", createNote);
+router.get("/note/:id", readNote);
+router.get("/note", readAllNote);
+router.get("/note-mynote/:id", readAllMyNote);
+router.put("/note/:id", updateNote);
+router.delete("/note/:id", deleteNote);
 
 module.exports = router;

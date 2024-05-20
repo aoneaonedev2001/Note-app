@@ -4,7 +4,7 @@ const db = require("../db");
 
 //----register
 exports.register = async (req, res) => {
-  const { customer_id, customer_name, password} = req.body;
+  const { customer_id, customer_name, password } = req.body;
 
   db.query(
     "SELECT * FROM customer WHERE customer_id = ?",
@@ -22,7 +22,7 @@ exports.register = async (req, res) => {
 
         db.query(
           "INSERT INTO customer SET ?",
-          { customer_id, customer_name, password: hashedPassword},
+          { customer_id, customer_name, password: hashedPassword },
           (error, results) => {
             if (error) {
               return res.status(500).json({ error });
@@ -58,46 +58,21 @@ exports.login = async (req, res) => {
           const payload = {
             customer: {
               CustomerId: customer.customer_id,
-              CustomerName: customer.customer_name
+              CustomerName: customer.customer_name,
             },
           };
 
-          jwt.sign(payload, "jwtSecret", { expiresIn: 3600 }, (err, token) => {
-            if (err) throw err;
-            res.json({ token, payload });
-          });
+          jwt.sign(
+            payload,
+            process.env.JWT_SECRET,
+            { expiresIn: 3600 },
+            (err, token) => {
+              if (err) throw err;
+              res.json({ token, payload });
+            }
+          );
         }
       }
     }
   );
-};
-
-//---- currentCustomer
-exports.currentCustomer = async (req, res) => {
-  try {
-    const CustomerId = req.customer.CustomerId; 
-    
-    
-    const sql = "SELECT * FROM customer WHERE customer_id = ?";
-
-    
-    db.query(sql, [CustomerId], (error, results) => {
-      if (error) {
-        console.log(error);
-        return res.status(500).json({ error });
-      }
-
-      
-      const customer = results[0];
-      
-      
-      delete customer.password;
-
-      
-      res.json(customer);
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(500).send("Server Error!");
-  }
 };
